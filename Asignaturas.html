@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignaturas Registradas</title>
+    <style>
+        body {
+            font-family: Georgia, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            background-color: #d4d1d4;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .sillabus-container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .sillabus {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sillabus h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+        }
+        .sillabus-content {
+            display: none;
+            padding: 10px 0 0;
+            border-top: 1px solid #ddd;
+        }
+        .sillabus-content p {
+            margin: 5px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-green {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .button-green:hover {
+            background-color: #218838;
+        }
+        .button-red {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .button-red:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Asignaturas Registradas</h1>
+    <div class="sillabus-container" id="datos-Asignatura">
+        <!-- Aquí se mostrarán los datos del sílabo -->
+    </div>
+    <div class="button-container">
+        <button class="button-green" onclick="volver()">Volver al Inicio</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let formDataList = JSON.parse(localStorage.getItem('formDataList')) || [];
+
+            const contenedor = document.getElementById('datos-Asignatura');
+
+            if (formDataList.length > 0) {
+                formDataList.forEach((formData, index) => {
+                    const sillabus = document.createElement('div');
+                    sillabus.className = 'sillabus';
+                    sillabus.innerHTML = `
+                        <h2>Asignatura: ${formData.asignatura}</h2>
+                        <div class="sillabus-content">
+                            <p><strong>Código:</strong> ${formData.codigo}</p>
+                            <p><strong>Asignatura:</strong> ${formData.asignatura}</p>
+                            <p><strong>Carrera:</strong> ${formData.carrera}</p>
+                            <p><strong>Nivel:</strong> ${formData.nivel}</p>
+                            <p><strong>Docente:</strong> ${formData.docente}</p>
+                            <button class="button-red" onclick="eliminarRegistro(${index})">Eliminar</button>
+                        </div>
+                    `;
+                    contenedor.appendChild(sillabus);
+
+                    const title = sillabus.querySelector('h2');
+                    const content = sillabus.querySelector('.sillabus-content');
+                    title.addEventListener('click', () => {
+                        content.style.display = content.style.display === 'none' ? 'block' : 'none';
+                    });
+                });
+            } else {
+                contenedor.innerHTML = '<p>No hay datos disponibles.</p>';
+            }
+        });
+
+        function volver() {
+            window.location = 'home.html';
+        }
+
+        function eliminarRegistro(index) {
+            let formDataList = JSON.parse(localStorage.getItem('formDataList')) || [];
+            formDataList.splice(index, 1);
+            localStorage.setItem('formDataList', JSON.stringify(formDataList));
+            location.reload();
+        }
+    </script>
+</body>
+</html>

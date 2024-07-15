@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Docentes</title>
+    <style>
+           body {
+            font-family: Georgia, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            background-color: #d4d1d4;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            
+        }
+        .sillabus-container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .sillabus {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sillabus h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+        }
+        .sillabus-content {
+            display: none;
+            padding: 10px 0 0;
+            border-top: 1px solid #ddd;
+        }
+        .sillabus-content p {
+            margin: 5px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-green {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .button-green:hover {
+            background-color: #218838;
+        }
+        .button-red {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .button-red:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Docentes</h1>
+    <div class="sillabus-container" id="lista-docentes"></div>
+    <div class="button-container">
+        <a href="home.html" class="button-green">Volver al Inicio</a>
+    </div>
+    <script>
+        const listaDocentes = document.getElementById('lista-docentes');
+
+        const mostrarDocente = (docente, asignatura, index) => {
+            const sillabus = document.createElement('div');
+            sillabus.classList.add('sillabus');
+
+            const h2 = document.createElement('h2');
+            h2.textContent = `Profesor ${index + 1}`;
+
+            const sillabusContent = document.createElement('div');
+            sillabusContent.classList.add('sillabus-content');
+
+            const p = document.createElement('p');
+            p.textContent = `${docente} imparte la asignatura ${asignatura}`;
+
+            sillabusContent.appendChild(p);
+
+            const eliminarBtn = document.createElement('button');
+            eliminarBtn.textContent = 'Eliminar';
+            eliminarBtn.classList.add('button-red');
+            eliminarBtn.onclick = () => {
+                eliminarDocente(index);
+            };
+
+            sillabus.appendChild(h2);
+            sillabus.appendChild(sillabusContent);
+            sillabus.appendChild(eliminarBtn);
+
+            listaDocentes.appendChild(sillabus);
+
+            h2.addEventListener('click', () => {
+                sillabusContent.style.display = sillabusContent.style.display === 'block' ? 'none' : 'block';
+            });
+        };
+
+        const eliminarDocente = (index) => {
+            const docentesList = JSON.parse(localStorage.getItem('formDataList')) || [];
+            docentesList.splice(index, 1);
+            localStorage.setItem('formDataList', JSON.stringify(docentesList));
+            renderDocentes();
+        };
+
+        const renderDocentes = () => {
+            listaDocentes.innerHTML = '';
+            const docentesList = JSON.parse(localStorage.getItem('formDataList')) || [];
+            docentesList.forEach((formData, index) => {
+                mostrarDocente(formData.docente, formData.asignatura, index);
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDocentes();
+        });
+    </script>
+</body>
+</html>

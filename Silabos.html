@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silabos</title>
+    <style>
+        body {
+            font-family: Georgia, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            
+        }
+        h1 {
+            color: #333;
+            background-color: #d4d1d4;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .sillabus-container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .sillabus {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sillabus h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+        }
+        .sillabus-content {
+            display: none;
+            padding: 10px 0 0;
+            border-top: 1px solid #ddd;
+        }
+        .sillabus-content p {
+            margin: 5px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-green {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .button-green:hover {
+            background-color: #218838;
+        }
+        .button-red {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .button-red:hover {
+            background-color: #c82333;
+        }
+        .sillabus img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Datos del Sílabos</h1>
+    <div class="sillabus-container" id="datos-silabo">
+        <!-- Aquí se mostrarán los datos del sílabo -->
+    </div>
+    <div class="button-container">
+        <button class="button-green" onclick="volver()">Volver al Inicio</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let registros = JSON.parse(localStorage.getItem('registros')) || [];
+            const contenedor = document.getElementById('datos-silabo');
+            let contador = 1; // Inicializar contador para el número de sílabo
+
+            if (registros.length > 0) {
+                registros.forEach((registro, index) => {
+                    const sillabus = document.createElement('div');
+                    sillabus.className = 'sillabus';
+                    sillabus.innerHTML = `
+                        <h2>Silabo ${contador}</h2>
+                        <div class="sillabus-content">
+                            ${registro.imagen ? `<img src="${registro.imagen}" alt="Imagen del sílabo">` : ''}
+                            <p><strong>Asignatura:</strong> ${registro.silabo}</p>
+                            <p><strong>Código:</strong> ${registro.codigo}</p>
+                            <p><strong>Carrera:</strong> ${registro.carrera}</p>
+                            <p><strong>Unidad:</strong> ${registro.unidad}</p>
+                            <p><strong>Periodo:</strong> ${registro.periodo}</p>
+                            <p><strong>Paralelo:</strong> ${registro.paralelo}</p>
+                            <p><strong>Docente:</strong> ${registro.docente}</p>
+                            <button class="button-red" onclick="eliminarRegistro(${index})">Eliminar</button>
+                        </div>
+                    `;
+                    contenedor.appendChild(sillabus);
+
+                    const title = sillabus.querySelector('h2');
+                    const content = sillabus.querySelector('.sillabus-content');
+                    title.addEventListener('click', () => {
+                        content.style.display = content.style.display === 'none' ? 'block' : 'none';
+                    });
+
+                    contador++; // Incrementar el contador después de cada sílabo
+                });
+            } else {
+                contenedor.innerHTML = '<p>No hay datos disponibles.</p>';
+            }
+        });
+
+        function volver() {
+            window.location = 'home.html';
+        }
+
+        function eliminarRegistro(index) {
+            let registros = JSON.parse(localStorage.getItem('registros')) || [];
+            registros.splice(index, 1);
+            localStorage.setItem('registros', JSON.stringify(registros));
+            location.reload();
+        }
+    </script>
+</body>
+</html>
